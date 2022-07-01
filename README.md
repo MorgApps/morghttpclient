@@ -2,10 +2,7 @@
 Saves data into the local host on port 8081 url:
 
 http://localhost:8080/stats
-http://localhost:8080/doors
-http://localhost:8080/objects
 http://localhost:8080/events
-http://localhost:8080/post
 http://localhost:8080/inv
 http://localhost:8080/equip
 
