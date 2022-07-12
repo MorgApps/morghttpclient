@@ -18,7 +18,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
-import io.reactivex.rxjava3.annotations.Nullable;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -31,11 +30,9 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.http.api.RuneLiteAPI;
-import org.pf4j.Extension;
 import static java.lang.Integer.parseInt;
 import static net.runelite.api.Perspective.localToCanvas;
 
-@Extension
 @PluginDescriptor(
 	name = "Morg HTTP Client",
 	description = "Actively logs the player status to localhost on port 8081.",
@@ -465,7 +462,6 @@ public class HttpServerPlugin extends Plugin
 		}
 	}
 
-	@Nullable
 	private ObjectComposition getObjectComposition(int id)
 	{
 		ObjectComposition objectComposition = client.getObjectDefinition(id);
