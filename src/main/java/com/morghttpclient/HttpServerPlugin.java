@@ -75,10 +75,6 @@ public class HttpServerPlugin extends Plugin
 		server.createContext("/inv", handlerForInv(InventoryID.INVENTORY));
 		server.createContext("/equip", handlerForInv(InventoryID.EQUIPMENT));
 		server.createContext("/events", this::handleEvents);
-		server.createContext("/npc", this::handleNPC);
-		server.createContext("/objects", this::handleObjects);
-		server.createContext("/doors", this::handleDoors);
-		server.createContext("/post", this::handlePosts);
 		server.setExecutor(Executors.newSingleThreadExecutor());
 		startTime = System.currentTimeMillis();
 		xp_gained_skills = new int[Skill.values().length];
@@ -320,146 +316,9 @@ public class HttpServerPlugin extends Plugin
 		};
 	}
 
-	public void handleObjects(HttpExchange exchange) throws IOException
-	{
-		JsonObject obj_object = new JsonObject();
-		Scene scene = client.getScene();
-		Tile[][][] tiles = scene.getTiles();
-		int z = client.getPlane();
-
-		for (int x = 0; x < Constants.SCENE_SIZE; ++x)
-		{
-			for (int y = 0; y < Constants.SCENE_SIZE; ++y)
-			{
-				Tile tile = tiles[z][x][y];
-
-				if (tile == null)
-				{
-					continue;
-				}
-
-				Player player = client.getLocalPlayer();
-				if (player == null)
-				{
-					continue;
-				}
-				if (tile != null)
-				{
-					List<String> final_obj_name = new ArrayList<String>();
-					List<String> object;
-					object = renderGameObjects(tile, player, final_obj_name);
-					if (object.size() > 0)
-					{
-					obj_object.addProperty("objects_" + x + "_" + y, String.valueOf(object));
-					}
-				}
-
-			}
-		}
-		exchange.sendResponseHeaders(200, 0);
-		try (OutputStreamWriter out = new OutputStreamWriter(exchange.getResponseBody()))
-		{
-			RuneLiteAPI.GSON.toJson(obj_object, out);
-		}
-	}
-	@SneakyThrows
-	private List<String> renderGameObjects(Tile tile, Player player, List<String> obj_name)
-	{
-		MAX_DISTANCE = config.reachedDistance();
-		GameObject[] gameObjects = tile.getGameObjects();
-		if (gameObjects != null)
-		{
-			int i = 0;
-			for (GameObject gameObject : gameObjects)
-			{
-				if (gameObject != null && gameObject.getSceneMinLocation().equals(tile.getSceneLocation()))
-				{
-					if (player.getLocalLocation().distanceTo(gameObject.getLocalLocation()) <= MAX_DISTANCE)
-					{
-						LocalPoint objLocation = gameObject.getLocalLocation();
-						int playerPlane = player.getWorldLocation().getPlane();
-						Point objCanvasFinal = localToCanvas(client, objLocation, playerPlane);
-						int name = gameObject.getId();
-						String xy = "(" + gameObject.getWorldLocation().getX() + ", " + gameObject.getWorldLocation().getY() + ")";
-						obj_name.add(name + ": " + xy + ", (" + objCanvasFinal.getX() + ", " + objCanvasFinal.getY() + ")");
-					}
-				}
-				i = i +1;
-			}
-		}
-		return obj_name;
-	}
-
-	public void handleDoors(HttpExchange exchange) throws IOException
-	{
-		MAX_DISTANCE = config.reachedDistance();
-		JsonObject wall_object = new JsonObject();
-		Scene scene = client.getScene();
-		Tile[][][] tiles = scene.getTiles();
-		int z = client.getPlane();
-
-		for (int x = 0; x < Constants.SCENE_SIZE; ++x)
-		{
-			for (int y = 0; y < Constants.SCENE_SIZE; ++y)
-			{
-				Tile tile = tiles[z][x][y];
-
-				if (tile == null)
-				{
-					continue;
-				}
-
-				Player player = client.getLocalPlayer();
-				if (player == null)
-				{
-					continue;
-				}
-
-				TileObject tileObject = tile.getWallObject();
-				if (tileObject != null)
-				{
-					if (player.getLocalLocation().distanceTo(tileObject.getLocalLocation()) <= MAX_DISTANCE)
-					{
-						ObjectComposition objectDefinition = getObjectComposition(tileObject.getId());
-						LocalPoint wallLocation = tileObject.getLocalLocation();
-						int playerPlane = player.getWorldLocation().getPlane();
-						Point wallCanvasFinal = localToCanvas(client, wallLocation, playerPlane);
-						int name = tileObject.getId();
-						String xy = "(" + tileObject.getWorldLocation().getX() + ", " + tileObject.getWorldLocation().getY() + ")";
-						wall_object.addProperty("walls_" + x + "_" + y, name + ", " + xy + ", (" + wallCanvasFinal.getX() + ", " + wallCanvasFinal.getY() + ")");
-					}
-				}
-
-			}
-		}
-		exchange.sendResponseHeaders(200, 0);
-		try (OutputStreamWriter out = new OutputStreamWriter(exchange.getResponseBody()))
-		{
-			RuneLiteAPI.GSON.toJson(wall_object, out);
-		}
-	}
 
 	private String handleGetRequest(HttpExchange httpExchange) {
 		return httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[1];
-	}
-	public void handlePosts(HttpExchange exchange) throws IOException
-	{
-		String requestParam = handleGetRequest(exchange);
-		String[] string = requestParam.replaceAll("\\(", "")
-				.replaceAll("\\)", "")
-				.split(",");
-		JsonObject pos_object = new JsonObject();
-		Player player = client.getLocalPlayer();
-		WorldPoint worldLocation = new WorldPoint(parseInt(string[0]),parseInt(string[1]),0);
-		LocalPoint pos_Location = LocalPoint.fromWorld(client, worldLocation);
-		int playerPlane = player.getWorldLocation().getPlane();
-		Point pos_CanvasFinal = localToCanvas(client, pos_Location, playerPlane);
-		pos_object.addProperty("test", requestParam + " | " + string[0] + ", (" + pos_CanvasFinal.getX() + ", " + pos_CanvasFinal.getY() + ")");
-		exchange.sendResponseHeaders(200, 0);
-		try (OutputStreamWriter out = new OutputStreamWriter(exchange.getResponseBody()))
-		{
-			RuneLiteAPI.GSON.toJson(pos_object, out);
-		}
 	}
 
 	private ObjectComposition getObjectComposition(int id)
