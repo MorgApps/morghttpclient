@@ -157,49 +157,6 @@ public class HttpServerPlugin extends Plugin
 			RuneLiteAPI.GSON.toJson(skills, out);
 		}
 	}
-	public void handleNPC(HttpExchange exchange) throws IOException
-	{
-
-		java.util.List<NPC> npcs = client.getNpcs();
-		Player player = client.getLocalPlayer();
-
-		JsonObject object = new JsonObject();
-		int[] localXY = new int[]{0, 0};
-		int i;
-		i = 0;
-		for (NPC npc : npcs)
-		{
-
-			if (npc != null)
-			{
-				NPCComposition composition = npc.getComposition();
-				if (player.getLocalLocation().distanceTo(npc.getLocalLocation()) <= MAX_DISTANCE)
-				{
-					LocalPoint npcLocation = npc.getLocalLocation();
-					int playerPlane = player.getWorldLocation().getPlane();
-					Point npcCanvasFinal = localToCanvas(client, npcLocation, playerPlane);
-					localXY = new int[]{npcCanvasFinal.getX(), npcCanvasFinal.getY()};
-					if (localXY[0] > 1 && localXY[0] < MAX_DISTANCE)
-					{
-						if (localXY[1] > 1 && localXY[1] < MAX_DISTANCE)
-						{
-							String name = npc.getName() + "_" + i;
-							String xy = Arrays.toString(localXY) + ", (" + npc.getWorldLocation().getX() + ", " + npc.getWorldLocation().getY() + ")";
-
-							object.addProperty(name, xy);
-						}
-
-					}
-				}
-			}
-			i = i +1;
-		}
-		exchange.sendResponseHeaders(200, 0);
-		try (OutputStreamWriter out = new OutputStreamWriter(exchange.getResponseBody()))
-		{
-			RuneLiteAPI.GSON.toJson(object, out);
-		}
-	}
 
 	public void handleEvents(HttpExchange exchange) throws IOException
 	{
