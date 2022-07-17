@@ -272,17 +272,6 @@ public class HttpServerPlugin extends Plugin
 			}
 		};
 	}
-
-
-	private String handleGetRequest(HttpExchange httpExchange) {
-		return httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[1];
-	}
-
-	private ObjectComposition getObjectComposition(int id)
-	{
-		ObjectComposition objectComposition = client.getObjectDefinition(id);
-		return objectComposition.getImpostorIds() == null ? objectComposition : objectComposition.getImpostor();
-	}
 	private <T> T invokeAndWait(Callable<T> r)
 	{
 		try
