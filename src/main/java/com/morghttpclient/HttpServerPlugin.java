@@ -10,28 +10,19 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.Point;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.http.api.RuneLiteAPI;
-import static java.lang.Integer.parseInt;
-import static net.runelite.api.Perspective.localToCanvas;
 
 @PluginDescriptor(
 	name = "Morg HTTP Client",
