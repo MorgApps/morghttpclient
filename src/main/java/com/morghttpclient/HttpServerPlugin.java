@@ -28,7 +28,7 @@ import net.runelite.http.api.RuneLiteAPI;
 	name = "Morg HTTP Client",
 	description = "Actively logs the player status to localhost on port 8081.",
 	tags = {"status", "stats"},
-	enabledByDefault = false
+	enabledByDefault = true
 )
 @Slf4j
 public class HttpServerPlugin extends Plugin
@@ -61,7 +61,7 @@ public class HttpServerPlugin extends Plugin
 		//MAX_DISTANCE = config.reachedDistance();
 		skillList = Skill.values();
 		xpTracker = new XpTracker(this);
-		server = HttpServer.create(new InetSocketAddress(8080), 0);
+		server = HttpServer.create(new InetSocketAddress(8081), 0);
 		server.createContext("/stats", this::handleStats);
 		server.createContext("/inv", handlerForInv(InventoryID.INVENTORY));
 		server.createContext("/equip", handlerForInv(InventoryID.EQUIPMENT));
