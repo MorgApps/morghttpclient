@@ -1,5 +1,6 @@
 package com.morghttpclient;
 
+import net.runelite.api.events.ChatMessage;
 import com.google.inject.Provides;
 import net.runelite.api.events.GameTick;
 import com.google.gson.JsonArray;
