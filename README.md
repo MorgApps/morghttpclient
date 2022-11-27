@@ -1,15 +1,15 @@
 # Morg Http Client
 Saves data into the local host on port 8081 url:
 
-http://localhost:8080/stats
+http://localhost:8081/stats
 
-http://localhost:8080/events
+http://localhost:8081/events
 
-http://localhost:8080/inv
+http://localhost:8081/inv
 
-http://localhost:8080/equip
+http://localhost:8081/equip
 
-# http://localhost:8080/stats
+# http://localhost:8081/stats
 
 - tracks xp gained for each skill
 image
