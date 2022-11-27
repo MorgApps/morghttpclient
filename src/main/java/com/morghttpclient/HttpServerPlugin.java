@@ -49,6 +49,7 @@ public class HttpServerPlugin extends Plugin
 	public ClientThread clientThread;
 	public HttpServer server;
 	public int MAX_DISTANCE = 1200;
+	public String msg;
 	@Provides
 	private HttpServerConfig provideConfig(ConfigManager configManager)
 	{
@@ -81,7 +82,13 @@ public class HttpServerPlugin extends Plugin
 			skill_count++;
 		}
 	}
-
+	@Subscribe
+	public void onChatMessage(ChatMessage event)
+	{
+		msg = event.getMessage();
+		//System.out.println("onChatmsg:" + msg);
+	}
+	
 	@Override
 	protected void shutDown() throws Exception
 	{
@@ -206,6 +213,7 @@ public class HttpServerPlugin extends Plugin
 		JsonObject mouse = new JsonObject();
 		object.addProperty("animation", player.getAnimation());
 		object.addProperty("animation pose", player.getPoseAnimation());
+		object.addProperty("latest msg", msg);
 		object.addProperty("run energy", client.getEnergy());
 		object.addProperty("game tick", client.getGameCycle());
 		object.addProperty("health", client.getBoostedSkillLevel(Skill.HITPOINTS) + "/" + client.getRealSkillLevel(Skill.HITPOINTS));
