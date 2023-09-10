@@ -131,6 +131,7 @@ public class HttpServerPlugin extends Plugin
 		JsonArray skills = new JsonArray();
 		JsonObject headers = new JsonObject();
 		headers.addProperty("username", client.getUsername());
+		headers.addProperty("account hash", client.getAccountHash());
 		headers.addProperty("player name", player.getName());
 		int skill_count = 0;
 		skills.add(headers);
