@@ -235,9 +235,6 @@ public class HttpServerPlugin extends Plugin
 		camera.addProperty("x", client.getCameraX());
 		camera.addProperty("y", client.getCameraY());
 		camera.addProperty("z", client.getCameraZ());
-		// camera.addProperty("x2", client.getCameraX2());
-		// camera.addProperty("y2", client.getCameraY2());
-		// camera.addProperty("z2", client.getCameraZ2());
 		object.add("worldPoint", worldPoint);
 		object.add("camera", camera);
 		object.add("mouse", mouse);
