@@ -68,7 +68,7 @@ public class HttpServerPlugin extends Plugin
 		server.createContext("/inv", handlerForInv(InventoryID.INVENTORY));
 		server.createContext("/equip", handlerForInv(InventoryID.EQUIPMENT));
 		server.createContext("/events", this::handleEvents);
-		server.setExecutor(Executors.newSingleThreadExecutor());
+		server.setExecutor(Executors.newCachedThreadPool());
 		startTime = System.currentTimeMillis();
 		xp_gained_skills = new int[Skill.values().length];
 		int skill_count = 0;
