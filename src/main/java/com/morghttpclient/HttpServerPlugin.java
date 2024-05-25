@@ -63,7 +63,7 @@ public class HttpServerPlugin extends Plugin
 		//MAX_DISTANCE = config.reachedDistance();
 		skillList = Skill.values();
 		xpTracker = new XpTracker(this);
-		server = HttpServer.create(new InetSocketAddress(8081), 0);
+		server = HttpServer.create(new InetSocketAddress(config.port()), 0);
 		server.createContext("/stats", this::handleStats);
 		server.createContext("/inv", handlerForInv(InventoryID.INVENTORY));
 		server.createContext("/equip", handlerForInv(InventoryID.EQUIPMENT));
