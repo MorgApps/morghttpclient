@@ -11,6 +11,8 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -24,6 +26,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.http.api.RuneLiteAPI;
+
 
 @PluginDescriptor(
 	name = "Morg HTTP Client",
@@ -196,12 +199,16 @@ public class HttpServerPlugin extends Plugin
 			npcHealth2 = 0;
 			health = 0;
 	}
+		final List<Integer> idlePoses = Arrays.asList(808, 813, 3418, 10075);
+
 		JsonObject object = new JsonObject();
 		JsonObject camera = new JsonObject();
 		JsonObject worldPoint = new JsonObject();
 		JsonObject mouse = new JsonObject();
 		object.addProperty("animation", player.getAnimation());
 		object.addProperty("animation pose", player.getPoseAnimation());
+		boolean isIdle = player.getAnimation() == -1 && idlePoses.contains(player.getPoseAnimation());
+		object.addProperty("Is idle", isIdle);
 		object.addProperty("latest msg", msg);
 		object.addProperty("run energy", client.getEnergy());
 		object.addProperty("game tick", client.getGameCycle());
