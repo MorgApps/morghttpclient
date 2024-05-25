@@ -75,10 +75,6 @@ public class HttpServerPlugin extends Plugin
 		server.start();
 		for (Skill skill : Skill.values())
 		{
-			if (skill == Skill.OVERALL)
-			{
-				continue;
-			}
 			xp_gained_skills[skill_count] = 0;
 			skill_count++;
 		}
@@ -106,10 +102,6 @@ public class HttpServerPlugin extends Plugin
 		int skill_count = 0;
 		for (Skill skill : Skill.values())
 		{
-			if (skill == Skill.OVERALL)
-			{
-				continue;
-			}
 			int xp_gained = handleTracker(skill);
 			xp_gained_skills[skill_count] = xp_gained;
 			skill_count ++;
@@ -136,10 +128,6 @@ public class HttpServerPlugin extends Plugin
 		skills.add(headers);
 		for (Skill skill : Skill.values())
 		{
-			if (skill == Skill.OVERALL)
-			{
-				continue;
-			}
 			JsonObject object = new JsonObject();
 			object.addProperty("stat", skill.getName());
 			object.addProperty("level", client.getRealSkillLevel(skill));
