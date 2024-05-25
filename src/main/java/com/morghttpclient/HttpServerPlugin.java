@@ -211,6 +211,8 @@ public class HttpServerPlugin extends Plugin
 		object.addProperty("Is idle", isIdle);
 		object.addProperty("latest msg", msg);
 		object.addProperty("run energy", client.getEnergy());
+		int specialAttack = client.getVarpValue(300) / 10;
+		object.addProperty("special attack", specialAttack);
 		object.addProperty("game tick", client.getGameCycle());
 		object.addProperty("health", client.getBoostedSkillLevel(Skill.HITPOINTS) + "/" + client.getRealSkillLevel(Skill.HITPOINTS));
 		object.addProperty("interacting code", String.valueOf(player.getInteracting()));
