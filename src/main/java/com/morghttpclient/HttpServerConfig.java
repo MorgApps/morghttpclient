@@ -13,4 +13,11 @@ public interface HttpServerConfig extends Config
 	{
 		return 1200;
 	}
+
+	@ConfigItem(keyName = "Port", name = "Port", description = "Port to launch the webserver on")
+	@Range(min = 1, max = 20000)
+	default int port()
+	{
+		return 8081;
+	}
 }

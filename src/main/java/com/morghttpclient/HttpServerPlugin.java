@@ -11,6 +11,8 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -24,6 +26,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.http.api.RuneLiteAPI;
+
 
 @PluginDescriptor(
 	name = "Morg HTTP Client",
@@ -63,22 +66,18 @@ public class HttpServerPlugin extends Plugin
 		//MAX_DISTANCE = config.reachedDistance();
 		skillList = Skill.values();
 		xpTracker = new XpTracker(this);
-		server = HttpServer.create(new InetSocketAddress(8081), 0);
+		server = HttpServer.create(new InetSocketAddress(config.port()), 0);
 		server.createContext("/stats", this::handleStats);
 		server.createContext("/inv", handlerForInv(InventoryID.INVENTORY));
 		server.createContext("/equip", handlerForInv(InventoryID.EQUIPMENT));
 		server.createContext("/events", this::handleEvents);
-		server.setExecutor(Executors.newSingleThreadExecutor());
+		server.setExecutor(Executors.newCachedThreadPool());
 		startTime = System.currentTimeMillis();
 		xp_gained_skills = new int[Skill.values().length];
 		int skill_count = 0;
 		server.start();
 		for (Skill skill : Skill.values())
 		{
-			if (skill == Skill.OVERALL)
-			{
-				continue;
-			}
 			xp_gained_skills[skill_count] = 0;
 			skill_count++;
 		}
@@ -106,10 +105,6 @@ public class HttpServerPlugin extends Plugin
 		int skill_count = 0;
 		for (Skill skill : Skill.values())
 		{
-			if (skill == Skill.OVERALL)
-			{
-				continue;
-			}
 			int xp_gained = handleTracker(skill);
 			xp_gained_skills[skill_count] = xp_gained;
 			skill_count ++;
@@ -136,10 +131,6 @@ public class HttpServerPlugin extends Plugin
 		skills.add(headers);
 		for (Skill skill : Skill.values())
 		{
-			if (skill == Skill.OVERALL)
-			{
-				continue;
-			}
 			JsonObject object = new JsonObject();
 			object.addProperty("stat", skill.getName());
 			object.addProperty("level", client.getRealSkillLevel(skill));
@@ -208,14 +199,20 @@ public class HttpServerPlugin extends Plugin
 			npcHealth2 = 0;
 			health = 0;
 	}
+		final List<Integer> idlePoses = Arrays.asList(808, 813, 3418, 10075);
+
 		JsonObject object = new JsonObject();
 		JsonObject camera = new JsonObject();
 		JsonObject worldPoint = new JsonObject();
 		JsonObject mouse = new JsonObject();
 		object.addProperty("animation", player.getAnimation());
 		object.addProperty("animation pose", player.getPoseAnimation());
+		boolean isIdle = player.getAnimation() == -1 && idlePoses.contains(player.getPoseAnimation());
+		object.addProperty("Is idle", isIdle);
 		object.addProperty("latest msg", msg);
 		object.addProperty("run energy", client.getEnergy());
+		int specialAttack = client.getVarpValue(300) / 10;
+		object.addProperty("special attack", specialAttack);
 		object.addProperty("game tick", client.getGameCycle());
 		object.addProperty("health", client.getBoostedSkillLevel(Skill.HITPOINTS) + "/" + client.getRealSkillLevel(Skill.HITPOINTS));
 		object.addProperty("interacting code", String.valueOf(player.getInteracting()));
@@ -235,9 +232,6 @@ public class HttpServerPlugin extends Plugin
 		camera.addProperty("x", client.getCameraX());
 		camera.addProperty("y", client.getCameraY());
 		camera.addProperty("z", client.getCameraZ());
-		camera.addProperty("x2", client.getCameraX2());
-		camera.addProperty("y2", client.getCameraY2());
-		camera.addProperty("z2", client.getCameraZ2());
 		object.add("worldPoint", worldPoint);
 		object.add("camera", camera);
 		object.add("mouse", mouse);

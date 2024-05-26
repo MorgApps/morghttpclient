@@ -10,13 +10,13 @@ repositories {
 	mavenCentral()
 }
 
-def runeLiteVersion = '1.8.26'
+def runeLiteVersion = 'latest.release'
 
 dependencies {
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
 
-	compileOnly 'org.projectlombok:lombok:1.18.20'
-	annotationProcessor 'org.projectlombok:lombok:1.18.20'
+	compileOnly 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
 	testImplementation 'junit:junit:4.12'
 	testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion
@@ -24,9 +24,9 @@ dependencies {
 }
 
 group = 'com.morghttpclient'
-version = '1.8.26-SNAPSHOT'
-sourceCompatibility = '1.8'
+version = '1.0-SNAPSHOT'
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
+	options.release.set(11)
 }
